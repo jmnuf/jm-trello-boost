@@ -1,4 +1,7 @@
 
+/**
+ * @type {import('../src/utils/types/trello').Trello.PowerUp}
+ */
 window.TrelloPowerUp.initialize({
 	"card-back-section": (t) => {
 		return {
