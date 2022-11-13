@@ -7,17 +7,21 @@ import Shield from "../components/shield";
 const t = globalThis.window?.TrelloPowerUp?.iframe();
 
 export default function CardBackSection() {
-	const compId = "JCardBack"
+	const compId = "JCardBack";
 	const priorityState = useState(5);
 	const priority = priorityState[0];
 	const setPriority = async (value:number) => await priorityLimiter(value, priorityState[1]);
 	if (t) {
-		const card = t.card("id");
+		const card = t.card("id", "due");
 		card.then(console.log);
 		t.render(() => t.sizeTo("#" + compId));
 		t.get("card", "shared", "priority", priority).then(setPriority);
 	}
-	const buttonCls = "border border-solid border-violet-300 hover:border hover:border-solid hover:border-violet-300 focus:border focus:border-solid focus:border-violet-300"
+	const buttonBorderCSS = "border border-solid border-violet-300 hover:border hover:border-solid hover:border-violet-300 focus:border focus:border-solid focus:border-violet-300"
+	const buttonBGClrsCSS = "bg-slate-100 hover:bg-slate-200"
+	const buttonCSS = `${buttonBorderCSS} ${buttonBGClrsCSS}`;
+
+	const priorityCSS = priority > 6 ? "text-red-500" : priority < 4 ? "text-green-600" : undefined;
 	return (
 		<Background
 			pageHead={{
@@ -31,11 +35,11 @@ export default function CardBackSection() {
 					label="last project update"
 					style="plastic"
 				/>
-				<div className="flex items-center justify-evenly">
-					<h2>Priority: {priority}</h2>
+				<div className="flex items-center justify-between">
+					<h2>Priority: <span className={priorityCSS}>{priority}</span></h2>
 					<div className="flex flex-col">
-						<button type="button" className={buttonCls} onClick={() => setPriority(priority + 1)}>Increase</button>
-						<button type="button" className={buttonCls} onClick={() => setPriority(priority - 1)}>decrease</button>
+						<button className={buttonCSS} onClick={() => setPriority(priority + 1)}>&#43;</button>
+						<button className={buttonCSS} onClick={() => setPriority(priority - 1)}>&#45;</button>
 					</div>
 				</div>
 			</Container>
