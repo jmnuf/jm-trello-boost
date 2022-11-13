@@ -7,13 +7,14 @@ import Shield from "../components/shield";
 const t = globalThis.window?.TrelloPowerUp?.iframe();
 
 export default function CardBackSection() {
+	const compId = "JCardBack"
 	const priorityState = useState(5);
 	const priority = priorityState[0];
 	const setPriority = (value:number) => priorityLimiter(value, priorityState[1]);
 	if (t) {
 		const card = t.card("id");
 		card.then(console.log);
-		t.render(() => t.sizeTo("#JCardBack"));
+		t.render(() => t.sizeTo("#" + compId));
 		t.get("card", "shared", "priority", priority).then(setPriority);
 	}
 	return (
@@ -22,7 +23,7 @@ export default function CardBackSection() {
 				title: "JmBoost: Card Back Section"
 			}}
 		>
-			<Container id="JCardback">
+			<Container id={compId}>
 				<Shield
 					type="raw"
 					url="https://img.shields.io/github/last-commit/jmnuf/jm-trello-boost/main?"
