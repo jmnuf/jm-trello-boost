@@ -24,7 +24,7 @@ export default function Background(props:BackgroundProps) {
 		<>
 			<PageHead {...props.pageHead} />
 			<main className="w-full m-0">
-				<div className="container flex flex-col mx-auto h-full">
+				<div className="container flex flex-col mx-auto">
 					{props.children}
 				</div>
 			</main>

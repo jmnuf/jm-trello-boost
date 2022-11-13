@@ -4,10 +4,11 @@ import Script from "next/script";
 
 export default function Document() {
 	return (
-		<Html className="bg-slate-600 text-slate-100">
+		<Html>
 			<Head />
 			<body>
 				<Main />
+				<link rel="stylesheet" href="https://p.trellocdn.com/power-up.min.css" />
 				<Script
 					src="https://p.trellocdn.com/power-up.min.js"
 					strategy="beforeInteractive"
