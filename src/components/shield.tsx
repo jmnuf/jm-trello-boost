@@ -42,10 +42,10 @@ export default function Shield(props:ShieldProps) {
 			if (!altText) {
 				altText = label;
 			}
-			query.push(`label=${encodeURIComponent(label)}`);
-			query.push(`message=${encodeURIComponent(message)}`);
+			query.push(`label=${label}`);
+			query.push(`message=${message}`);
 			if (color) {
-				query.push(`color=${encodeURIComponent(color)}`);
+				query.push(`color=${color}`);
 			}
 			shieldLink = "https://img.shields.io/static/v1?";
 			break;
@@ -55,7 +55,7 @@ export default function Shield(props:ShieldProps) {
 				altText = "Shield.io Badge"
 			}
 			if (props.label) {
-				query.push(`label=${encodeURIComponent(props.label)}`);
+				query.push(`label=${props.label}`);
 			}
 			shieldLink = props.url;
 			break;
@@ -65,18 +65,17 @@ export default function Shield(props:ShieldProps) {
 	if (query.length > 0) {
 		if (shieldLink.indexOf("?") == -1) {
 			shieldLink += "?";
-		} else {
+		} else if (!shieldLink.endsWith("?")) {
 			shieldLink += "&";
 		}
 		shieldLink += query.join("&");
 	}
 
 	const width = props.width ? props.width : 150;
-	const height = props.height ? props.height : width * 0.65;
+	const height = props.height ? props.height : 75;
 
 	return (
 		<Image
-			className="max-w-xs"
 			src={shieldLink}
 			alt={altText}
 			width={width}
