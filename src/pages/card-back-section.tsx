@@ -10,13 +10,14 @@ export default function CardBackSection() {
 	const compId = "JCardBack"
 	const priorityState = useState(5);
 	const priority = priorityState[0];
-	const setPriority = (value:number) => priorityLimiter(value, priorityState[1]);
+	const setPriority = async (value:number) => await priorityLimiter(value, priorityState[1]);
 	if (t) {
 		const card = t.card("id");
 		card.then(console.log);
 		t.render(() => t.sizeTo("#" + compId));
 		t.get("card", "shared", "priority", priority).then(setPriority);
 	}
+	const buttonCls = "border border-solid border-violet-300 hover:border hover:border-solid hover:border-violet-300 focus:border focus:border-solid focus:border-violet-300"
 	return (
 		<Background
 			pageHead={{
@@ -30,20 +31,27 @@ export default function CardBackSection() {
 					label="last project update"
 					style="plastic"
 				/>
-				<h2>Priority: {priority}</h2>
-				<input type="button" value="increase" onClick={() => setPriority(priority + 1)} />
-				<input type="button" value="decrease" onClick={() => setPriority(priority - 1)} />
+				<div className="flex items-center justify-evenly">
+					<h2>Priority: {priority}</h2>
+					<div className="flex flex-col">
+						<button type="button" className={buttonCls} onClick={() => setPriority(priority + 1)}>Increase</button>
+						<button type="button" className={buttonCls} onClick={() => setPriority(priority - 1)}>decrease</button>
+					</div>
+				</div>
 			</Container>
 		</Background>
 	)
 }
 
-const priorityLimiter = (value:number, setter:Dispatch<SetStateAction<number>>) => {
+const priorityLimiter = async (value:number, setter:Dispatch<SetStateAction<number>>) => {
 	value = Math.floor(value);
-	value = Math.max(value,  0);
-	value = Math.min(value, 10);
+	value = clamp(value, 0, 10);
 	if (t) {
-		t.set("card", "shared", "priority", value);
+		await t.set("card", "shared", "priority", value);
 	}
 	setter(value);
+}
+
+const clamp = (val:number, min:number, max:number) => {
+	return Math.min(Math.max(val, min), max);
 }
