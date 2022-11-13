@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Script from "next/script";
 import type { ReactFragment } from "react";
 import React from "react";
 
@@ -32,26 +33,8 @@ export default function Background(props:BackgroundProps) {
 }
 
 const PageHead:React.FC<PageHeadProps> = ({ title, description, keywords, children, initTrello }) => {
-	setTimeout(() => {
-		if (!document) return;
-		if (document.getElementById("PowerUpTrelloScript") != null) {
-			return;
-		}
-		const script = document.createElement("script");
-		script.src = "https://p.trellocdn.com/power-up.min.js";
-		script.id = "PowerUpTrelloScript";
-		if (initTrello) {
-			script.onload = () => {
-				const client = document.createElement("script");
-				client.id = "TrelloClientScript";
-				client.src = "/client.js";
-				document.head.appendChild(client);
-				script.onload = null;
-			}
-		}
-		document.head.appendChild(script);
-	}, 5);
-	return (
+	const clientScript = initTrello ? <Script src="/client.js" defer /> : undefined;
+	return (<>
 		<Head>
 			<title>{title}</title>
 			<meta name="author" content="JM" />
@@ -64,5 +47,6 @@ const PageHead:React.FC<PageHeadProps> = ({ title, description, keywords, childr
 			<link rel="icon" href="/favicon.ico" />
 			{children}
 		</Head>
-	)
+		{clientScript}
+	</>)
 }
