@@ -6,6 +6,7 @@ import Shield from "../components/shield";
 
 const t = globalThis.window?.TrelloPowerUp?.iframe();
 
+
 export default function CardBackSection() {
 	const compId = "JCardBack";
 	const priorityState = useState(5);
@@ -13,15 +14,23 @@ export default function CardBackSection() {
 	const setPriority = async (value:number) => await priorityLimiter(value, priorityState[1]);
 	if (t) {
 		const card = t.card("id", "due");
-		card.then(console.log);
+		card.then(data => {
+			const dueDate = new Date(data.due as string);
+			console.log({
+				id: data.id,
+				due: dueDate,
+				rawDue: data.due,
+			});
+		});
 		t.render(() => t.sizeTo("#" + compId));
 		t.get("card", "shared", "priority", priority).then(setPriority);
 	}
-	const buttonBorderCSS = "border border-solid border-violet-300 hover:border hover:border-solid hover:border-violet-300 focus:border focus:border-solid focus:border-violet-300"
-	const buttonBGClrsCSS = "bg-slate-100 hover:bg-slate-200"
-	const buttonCSS = `${buttonBorderCSS} ${buttonBGClrsCSS}`;
 
-	const priorityCSS = priority > 6 ? "text-red-500" : priority < 4 ? "text-green-600" : undefined;
+	const priorityCSS = priority >= 9 ? "text-red-500" : priority > 6 ? "text-amber-600" : priority < 4 ? "text-green-600" : undefined;
+
+	const priorityMessage = priority >= 9 ? "URGENT" : priority > 6 ? "High" : priority >= 4 ? "Normal" : "Low";
+	const priorityMessageCSS = priorityCSS ? priorityCSS : undefined;
+
 	return (
 		<Background
 			pageHead={{
@@ -35,11 +44,24 @@ export default function CardBackSection() {
 					label="last project update"
 					style="plastic"
 				/>
-				<div className="flex items-center justify-between">
-					<h2>Priority: <span className={priorityCSS}>{priority}</span></h2>
-					<div className="flex flex-col">
-						<button className={buttonCSS} onClick={() => setPriority(priority + 1)}>&#43;</button>
-						<button className={buttonCSS} onClick={() => setPriority(priority - 1)}>&#45;</button>
+				<div className="flex items-center justify-between mt-2 ml-1">
+					<div className="flex flex-col w-full">
+						<h2
+							className="flex flex-row w-full gap-2 items-center align-middle"
+						>
+							Priority: <input
+								className="w-full"
+								style={{ marginBottom: "0px !important;" }}
+								type="number"
+								min={0}
+								max={10}
+								name="priority"
+								id="priorityInput"
+								value={priority}
+								onChange={e => setPriority(e.currentTarget.valueAsNumber)}
+							/>
+						</h2>
+						<h3 className="ml-5">Level: <span className={priorityMessageCSS}>{priorityMessage}</span></h3>
 					</div>
 				</div>
 			</Container>
@@ -48,10 +70,16 @@ export default function CardBackSection() {
 }
 
 const priorityLimiter = async (value:number, setter:Dispatch<SetStateAction<number>>) => {
+	if (isNaN(value)) {
+		value = 0;
+	}
 	value = Math.floor(value);
 	value = clamp(value, 0, 10);
 	if (t) {
-		await t.set("card", "shared", "priority", value);
+		// While in dev environment don't attempt to set Trello value
+		if (globalThis.window?.location.hostname !== "localhost") {
+			await t.set("card", "shared", "priority", value);
+		}
 	}
 	setter(value);
 }
