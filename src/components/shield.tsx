@@ -1,4 +1,3 @@
-import Image from "next/image";
 
 
 type ShieldSimpleColors = "brightgreen"|"green"|"yellowgreen"|"orange"|"red"|"blue"|"lightgray";
@@ -71,15 +70,16 @@ export default function Shield(props:ShieldProps) {
 		shieldLink += query.join("&");
 	}
 
-	const width = props.width ? props.width : 150;
-	const height = props.height ? props.height : 75;
+	// const width = props.width ? props.width : 150;
+	// const height = props.height ? props.height : 75;
 
 	return (
-		<Image
+		// eslint-disable-next-line @next/next/no-img-element
+		<img
 			src={shieldLink}
 			alt={altText}
-			width={width}
-			height={height}
+			width={150}
+			// height={height}
 		/>
 	)
 }

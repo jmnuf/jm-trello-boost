@@ -23,7 +23,7 @@ export default function Background(props:BackgroundProps) {
 	return (
 		<>
 			<PageHead {...props.pageHead} />
-			<main className="w-full h-fit m-0">
+			<main className="w-full m-0">
 				<div className="container flex flex-col mx-auto h-full">
 					{props.children}
 				</div>
