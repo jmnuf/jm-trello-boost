@@ -7,6 +7,7 @@ export type JsxRenderable = JSX.Element|JSX.Element[]|ReactFragment;
 
 type PageHeadProps = {
 	title: string;
+	initTrello?:boolean;
 	description?:string;
 	keywords?:[string, string][];
 	children?:JsxRenderable;
@@ -30,7 +31,26 @@ export default function Background(props:BackgroundProps) {
 	)
 }
 
-const PageHead:React.FC<PageHeadProps> = ({ title, description, keywords, children }) => {
+const PageHead:React.FC<PageHeadProps> = ({ title, description, keywords, children, initTrello }) => {
+	setTimeout(() => {
+		if (!document) return;
+		if (document.getElementById("PowerUpTrelloScript") != null) {
+			return;
+		}
+		const script = document.createElement("script");
+		script.src = "https://p.trellocdn.com/power-up.min.js";
+		script.id = "PowerUpTrelloScript";
+		if (initTrello) {
+			script.onload = () => {
+				const client = document.createElement("script");
+				client.id = "TrelloClientScript";
+				client.src = "/client.js";
+				document.head.appendChild(client);
+				script.onload = null;
+			}
+		}
+		document.head.appendChild(script);
+	}, 5);
 	return (
 		<Head>
 			<title>{title}</title>

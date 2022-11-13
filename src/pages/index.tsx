@@ -6,7 +6,8 @@ const Home: NextPage = () => {
 	return (
 		<Background
 			pageHead={{
-				title:"JM Trello Boost 🚀"
+				title:"JM Trello Boost 🚀",
+				initTrello: true,
 			}}
 		>
 
