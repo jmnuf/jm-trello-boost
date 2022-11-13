@@ -1,4 +1,5 @@
 import Background from "../components/background";
+import Container from "../components/container";
 import Shield from "../components/shield";
 
 const t = globalThis.window?.TrelloPowerUp?.iframe();
@@ -12,12 +13,14 @@ export default function cardBackSection() {
 				title: "JmBoost: Card Back Section"
 			}}
 		>
-			<Shield
-				type="raw"
-				url="https://img.shields.io/github/last-commit/jmnuf/jm-trello-boost/main?"
-				label="Last GitHub commit"
-				style="plastic"
-			/>
+			<Container>
+				<Shield
+					type="raw"
+					url="https://img.shields.io/github/last-commit/jmnuf/jm-trello-boost/main?"
+					label="last project update"
+					style="plastic"
+				/>
+			</Container>
 		</Background>
 	)
 }

@@ -1,15 +1,18 @@
+import Image from "next/image";
 
 
-type ShieldSimpleColors = 'brightgreen'|'green'|'yellowgreen'|'orange'|'red'|'blue'|'lightgray';
+type ShieldSimpleColors = "brightgreen"|"green"|"yellowgreen"|"orange"|"red"|"blue"|"lightgray";
 
-type ShieldPriorityColors = 'success'|'important'|'critical'|'informational'|'inactive';
+type ShieldPriorityColors = "success"|"important"|"critical"|"informational"|"inactive";
 
-type ShieldStyle = 'plastic'|'flat'|'flat-square'|'for-the-badge'|'social'
+type ShieldStyle = "plastic"|"flat"|"flat-square"|"for-the-badge"|"social"
 
 type ShieldColors = ShieldSimpleColors|ShieldPriorityColors;
 
 type BasicShieldProps = {
-	type: 'custom'|'raw';
+	type: "custom"|"raw";
+	width?: number,
+	height?: number,
 	style?: ShieldStyle
 	label?: string;
 	color?:ShieldColors;
@@ -17,24 +20,24 @@ type BasicShieldProps = {
 }
 
 type ShieldProps = BasicShieldProps & ({
-	type:'custom';
+	type:"custom";
 	label:string;
 	message:string;
 }|{
-	type:'raw';
+	type:"raw";
 	url:string;
 })
 
 export default function Shield(props:ShieldProps) {
 	const type = props.type;
 	let altText = props.altText;
-	let shieldLink = '';
+	let shieldLink = "";
 	const query:string[] = [];
 	if (props.style) {
 		query.push(`style=${props.style}`);
 	}
 	switch(type) {
-		case 'custom': {
+		case "custom": {
 			const { color, label, message } = props;
 			if (!altText) {
 				altText = label;
@@ -44,12 +47,12 @@ export default function Shield(props:ShieldProps) {
 			if (color) {
 				query.push(`color=${encodeURIComponent(color)}`);
 			}
-			shieldLink = `https://img.shields.io/static/v1?`;
+			shieldLink = "https://img.shields.io/static/v1?";
 			break;
 		}
-		case 'raw': {
+		case "raw": {
 			if (!altText) {
-				altText = 'Shield.io Badge'
+				altText = "Shield.io Badge"
 			}
 			if (props.label) {
 				query.push(`label=${encodeURIComponent(props.label)}`);
@@ -60,19 +63,24 @@ export default function Shield(props:ShieldProps) {
 	}
 
 	if (query.length > 0) {
-		if (shieldLink.indexOf('?') == -1) {
-			shieldLink += '?';
+		if (shieldLink.indexOf("?") == -1) {
+			shieldLink += "?";
 		} else {
-			shieldLink += '&';
+			shieldLink += "&";
 		}
-		shieldLink += query.join('&');
+		shieldLink += query.join("&");
 	}
-	
+
+	const width = props.width ? props.width : 150;
+	const height = props.height ? props.height : width * 0.65;
+
 	return (
-		// eslint-disable-next-line @next/next/no-img-element
-		<img
+		<Image
+			className="max-w-xs"
 			src={shieldLink}
 			alt={altText}
+			width={width}
+			height={height}
 		/>
 	)
 }

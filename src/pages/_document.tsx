@@ -4,7 +4,7 @@ import Script from "next/script";
 
 export default function Document() {
 	return (
-		<Html>
+		<Html className="bg-slate-600 text-slate-100">
 			<Head />
 			<body>
 				<Main />

@@ -13,5 +13,8 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+	images: {
+		domains: [ "img.shields.io" ]
+	}
 };
 export default config;
