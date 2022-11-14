@@ -35,7 +35,7 @@ window.TrelloPowerUp.initialize({
 				return [
 					{
 						text: "Priority Asc",
-						callback: function(t, { cards }) {
+						callback: async function(t, { cards }) {
 							/** @type {{id:string, priority:number}[]} */
 							const priorityCards = await (async () => {
 								/** @type {{id:string, priority:number}[]} */
