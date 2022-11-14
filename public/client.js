@@ -32,30 +32,38 @@ window.TrelloPowerUp.initialize({
 	"list-sorters": (t) => {
 		return t.list("name", "id")
 			.then(list => {
-				console.log(list.name, list.id);
+				console.log("Attempting to sort list:", `${list.name}<${list.id}>`);
 				return [
 					{
 						text: "Priority Asc",
-						callback: function(t, { cards }) {
-							const priorityFinder = field => field.id == "priority";
-							const priorityCards = cards.filter(c => {
-								const customFields = c.customFieldItems;
-								const index = customFields.findIndex(priorityFinder);
-								return index != -1;
-							});
+						callback: async function(t, { cards }) {
+							const priorityCards = await (async () => {
+								const toSort = [];
+								for(const c of cards) {
+									const id = c.id;
+									const priority = await t.get(id, "shared", "priority", null);
+									if (priority != null) {
+										toSort.push({ id, priority });
+									}
+								}
+								return toSort;
+							})();
+							// If no priority cards, we aren't sorting the list cause we can't
+							if (priorityCards.length == 0) {
+								console.log("Can't sort, no priority cards found!")
+								return [];
+							}
 							if (priorityCards.length > 1) {
-								priorityCards.sort((a, b) => a.customFieldItems.find(priorityFinder).value.number - b.customFieldItems.find(priorityFinder).value.number);
+								priorityCards.sort((a, b) => a.priority - b.priority);
 							}
-							const sorted = priorityCards.slice();
+							const sorted = priorityCards.map(c => c.id);
 							for(const card of cards) {
-								if (sorted.includes(card)) continue;
-								sorted.push(card);
+								if (sorted.includes(card.id)) continue;
+								sorted.push(card.id);
 							}
-							const ids = sorted.map(c => c.id);
 							console.log("priorityCards", priorityCards);
 							console.log("sortedCards", sorted);
-							console.log("sortedIds", ids);
-							return ids;
+							return sorted;
 						}
 					}
 				]
