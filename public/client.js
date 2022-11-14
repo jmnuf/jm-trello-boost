@@ -43,10 +43,9 @@ window.TrelloPowerUp.initialize({
 								const index = customFields.findIndex(priorityFinder);
 								return index != -1;
 							});
-							if (priorityCards.length == 0) {
-								throw t.NotHandled();
+							if (priorityCards.length > 1) {
+								priorityCards.sort((a, b) => a.customFieldItems.find(priorityFinder).value.number - b.customFieldItems.find(priorityFinder).value.number);
 							}
-							priorityCards.sort((a, b) => a.customFieldItems.find(priorityFinder).value.number - b.customFieldItems.find(priorityFinder).value.number);
 							const sorted = priorityCards.slice();
 							for(const card of cards) {
 								if (sorted.includes(card)) continue;
