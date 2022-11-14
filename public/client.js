@@ -22,7 +22,9 @@ window.TrelloPowerUp.initialize({
 			return [
 				{
 					title: "Priority",
-					icon: "https://img.shields.io/badge/priority-" + String(value) + "-blueviolet?style=social",
+					icon: "https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg",
+					// icon: "https://img.shields.io/badge/priority-" + String(value) + "-blueviolet?style=social",
+					text: "Level " + value,
 				}
 			]
 		})
