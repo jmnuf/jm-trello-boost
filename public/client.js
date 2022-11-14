@@ -27,8 +27,8 @@
 			}
 			const sortedPriority = priorityCards.map(c => c.id);
 			const unsorted = cards.filter(c => !sortedPriority.includes(c.id)).map(c => c.id);
-			const sortedIds = sortedPriority.concat(unsorted);
-			return { sortedIds: asc ? sortedIds : sortedIds.reverse() };
+			const sortedIds = (asc ? sortedPriority : sortedPriority.reverse()).concat(unsorted);
+			return { sortedIds };
 		}
 	}
 
