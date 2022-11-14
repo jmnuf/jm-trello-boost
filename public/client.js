@@ -66,6 +66,22 @@
 					callback: prioritySorter(false)
 				}
 			];
+		},
+		"card-buttons": (t) => {
+			return t.get("card", "shared", "priority", null)
+				.then(value => {
+					if (typeof value == "number") {
+						throw t.NotHandled();
+					}
+					return [
+						{
+							text: "Add priority",
+							icon: "https://cdn.glitch.me/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg",
+							condition: "edit",
+							callback: async () => await t.set("card", "shared", "priority", 5)
+						}
+					]
+			});
 		}
 	});
 })()
