@@ -1,4 +1,11 @@
 (function() {
+	/*
+	 * Boost Icon: https://www.svgrepo.com/svg/429319/essential-upload-web-2
+	 * Info Icon: https://www.svgrepo.com/svg/429304/essential-information-web
+	 * 
+	 */
+	const BOOST_ICON = "https://www.svgrepo.com/show/429319/essential-upload-web-2.svg";
+	const INFO_ICON  = "https://www.svgrepo.com/show/429304/essential-information-web.svg";
 	
 	const prioritySorter = (asc) => {
 		return async function(t, { cards }) {
@@ -30,15 +37,21 @@
 	 */
 	window.TrelloPowerUp.initialize({
 		"card-back-section": (t) => {
-			return {
-				title: "My Back Section",
-				icon: "https://img.shields.io/badge/jm-priority-blueviolet?style=plastic",
-				content: {
-					type: "iframe",
-					url: t.signUrl("./card-back-section"),
-					height: 0,
-				},
-			};
+			return t.get("card", "shared", "priority", null)
+				.then(value => {
+					if (typeof value != "number") {
+						throw t.NotHandled();
+					}
+					return {
+						title: "My Back Section",
+						icon: BOOST_ICON,
+						content: {
+							type: "iframe",
+							url: t.signUrl("./card-back-section"),
+							height: 120,
+						},
+					};
+				})
 		},
 		"card-badges": (t) => {
 			return t.get("card", "shared", "priority").then(value => {
@@ -48,8 +61,7 @@
 				return [
 					{
 						title: "Priority",
-						icon: "https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg",
-						// icon: "https://img.shields.io/badge/priority-" + String(value) + "-blueviolet?style=social",
+						icon: INFO_ICON,
 						text: "Level " + value,
 					}
 				]
@@ -76,7 +88,7 @@
 					return [
 						{
 							text: "Add priority",
-							icon: "https://cdn.glitch.me/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-gray.svg",
+							icon: BOOST_ICON,
 							condition: "edit",
 							callback: async () => await t.set("card", "shared", "priority", 5)
 						}
