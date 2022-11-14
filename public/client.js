@@ -83,7 +83,14 @@
 			return t.get("card", "shared", "priority", null)
 				.then(value => {
 					if (typeof value == "number") {
-						throw t.NotHandled();
+						return [
+							{
+								text: "Remove priority",
+								icon: BOOST_ICON,
+								condition: "edit",
+								callback: async () => await t.remove("card", "shared", "priority")
+							}
+						]
 					}
 					return [
 						{
