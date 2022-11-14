@@ -28,5 +28,34 @@ window.TrelloPowerUp.initialize({
 				}
 			]
 		})
+	},
+	"list-sorters": (t) => {
+		return t.list("name", "id")
+			.then(list => {
+				console.log(list.name, list.id);
+				return [
+					{
+						text: "Priority Asc",
+						callback: function(t, { cards }) {
+							const priorityFinder = field => field.id == "priority";
+							const priorityCards = cards.filter(c => {
+								const customFields = c.customFieldItems;
+								const index = customFields.findIndex(priorityFinder);
+								return index != -1;
+							});
+							if (priorityCards.length == 0) {
+								throw t.NotHandled();
+							}
+							priorityCards.sort((a, b) => a.customFieldItems.find(priorityFinder).value.number - b.customFieldItems.find(priorityFinder).value.number);
+							const sorted = priorityCards.slice();
+							for(const card of cards) {
+								if (sorted.includes(card)) continue;
+								sorted.push(card);
+							}
+							return sorted.map(c => c.id);
+						}
+					}
+				]
+			});
 	}
 });
