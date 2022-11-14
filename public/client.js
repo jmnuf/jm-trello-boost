@@ -52,7 +52,11 @@ window.TrelloPowerUp.initialize({
 								if (sorted.includes(card)) continue;
 								sorted.push(card);
 							}
-							return sorted.map(c => c.id);
+							const ids = sorted.map(c => c.id);
+							console.log("priorityCards", priorityCards);
+							console.log("sortedCards", sorted);
+							console.log("sortedIds", ids);
+							return ids;
 						}
 					}
 				]
