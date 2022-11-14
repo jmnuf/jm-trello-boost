@@ -36,7 +36,7 @@
 				content: {
 					type: "iframe",
 					url: t.signUrl("./card-back-section"),
-					height: 180,
+					height: 0,
 				},
 			};
 		},

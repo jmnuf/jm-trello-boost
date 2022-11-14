@@ -9,9 +9,9 @@ const t = globalThis.window?.TrelloPowerUp?.iframe();
 
 export default function CardBackSection() {
 	const compId = "JCardBack";
-	const priorityState = useState(5);
+	const priorityState = useState<number|null>(null);
 	const priority = priorityState[0];
-	const setPriority = async (value:number) => await priorityLimiter(value, priorityState[1]);
+	const setPriority = async (value:number|null) => await priorityLimiter(value, priorityState[1]);
 	if (t) {
 		const card = t.card("id", "due");
 		card.then(data => {
@@ -22,8 +22,23 @@ export default function CardBackSection() {
 				rawDue: data.due,
 			});
 		});
-		t.render(() => t.sizeTo("#" + compId));
-		t.get("card", "shared", "priority", priority).then(setPriority);
+		t.get("card", "shared", "priority", priority).then((value:number|null) => {
+			if (value != null) {
+				t.render(() => t.sizeTo("#" + compId));
+			}
+			setPriority(value);
+		});
+	}
+
+	if (priority == null) {
+		return (
+			<Background 
+				pageHead={{
+					title:"JmBoost: Card Back Section"
+				}}
+			>
+			</Background>
+		)
 	}
 
 	const priorityCSS = priority >= 9 ? "text-red-500" : priority > 6 ? "text-amber-600" : priority < 4 ? "text-green-600" : undefined;
@@ -69,18 +84,27 @@ export default function CardBackSection() {
 	)
 }
 
-const priorityLimiter = async (value:number, setter:Dispatch<SetStateAction<number>>) => {
-	if (isNaN(value)) {
-		value = 0;
-	}
-	value = Math.floor(value);
-	value = clamp(value, 0, 10);
+const trelloSetPriority = async (value:number|null) => {
 	if (t) {
 		// While in dev environment don't attempt to set Trello value
 		if (globalThis.window?.location.hostname !== "localhost") {
 			await t.set("card", "shared", "priority", value);
 		}
 	}
+}
+
+const priorityLimiter = async (value:number|null, setter:Dispatch<SetStateAction<number|null>>) => {
+	if (value == null) {
+		await trelloSetPriority(value);
+		setter(value)
+		return;
+	}
+	if (isNaN(value)) {
+		value = 0;
+	}
+	value = Math.floor(value);
+	value = clamp(value, 0, 10);
+	await trelloSetPriority(value);
 	setter(value);
 }
 
