@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
-import Background from "../components/background";
 import HoverCard from "../components/hover-card";
+import Background from "../components/html/background";
 
 const Home: NextPage = () => {
 	return (

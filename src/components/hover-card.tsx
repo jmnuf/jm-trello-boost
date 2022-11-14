@@ -1,5 +1,5 @@
 import type { ReactFragment } from "react";
-import Zelda from "./zelda";
+import Zelda from "./wrappers/zelda";
 
 type HoverCardProps = {
 	name:string,
@@ -27,7 +27,7 @@ export default function HoverCard({
         className="m-auto mt-3 w-fit text-sm text-violet-500 underline decoration-dotted underline-offset-2"
         href={href}
 				next={nextLink}
-				target={openNewTab ? '_blank' : '_self'}
+				target={openNewTab ? "_blank" : "_self"}
       >
         {linkContents}
       </Zelda>

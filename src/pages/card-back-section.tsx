@@ -1,8 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
-import Background from "../components/background";
-import Container from "../components/container";
-import Shield from "../components/shield";
+import Background from "../components/html/background";
+import Container from "../components/html/container";
+import Shield from "../components/wrappers/shield";
 
 const t = globalThis.window?.TrelloPowerUp?.iframe();
 
