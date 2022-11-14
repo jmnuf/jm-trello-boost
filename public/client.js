@@ -31,13 +31,14 @@ window.TrelloPowerUp.initialize({
 	},
 	"list-sorters": (t) => {
 		return t.list("name", "id")
-			.then(list => {
-				console.log("Attempting to sort list:", `${list.name}<${list.id}>`);
+			.then(() => {
 				return [
 					{
 						text: "Priority Asc",
-						callback: async function(t, { cards }) {
+						callback: function(t, { cards }) {
+							/** @type {{id:string, priority:number}[]} */
 							const priorityCards = await (async () => {
+								/** @type {{id:string, priority:number}[]} */
 								const toSort = [];
 								for(const c of cards) {
 									const id = c.id;
@@ -46,24 +47,16 @@ window.TrelloPowerUp.initialize({
 										toSort.push({ id, priority });
 									}
 								}
-								return toSort;
+								return toSort.sort((a, b) => a.priority - b.priority);
 							})();
 							// If no priority cards, we aren't sorting the list cause we can't
 							if (priorityCards.length == 0) {
-								console.log("Can't sort, no priority cards found!")
-								return [];
-							}
-							if (priorityCards.length > 1) {
-								priorityCards.sort((a, b) => a.priority - b.priority);
+								return { sortedIds: priorityCards };
 							}
 							const sorted = priorityCards.map(c => c.id);
-							for(const card of cards) {
-								if (sorted.includes(card.id)) continue;
-								sorted.push(card.id);
-							}
-							console.log("priorityCards", priorityCards);
-							console.log("sortedCards", sorted);
-							return sorted;
+							const unsorted = cards.filter(c => !sorted.includes(c.id)).map(c => c.id);
+							const sortedIds = sorted.concat(unsorted);
+							return { sortedIds };
 						}
 					}
 				]
