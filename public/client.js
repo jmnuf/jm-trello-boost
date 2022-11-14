@@ -70,12 +70,12 @@
 		"list-sorters": () => {
 			return [
 				{
-					text: "Priority asc",
-					callback: prioritySorter(true)
+					text: "Priority: High to Low",
+					callback: prioritySorter(false)
 				},
 				{
-					text: "Priority dsc",
-					callback: prioritySorter(false)
+					text: "Priority Low to High",
+					callback: prioritySorter(true)
 				}
 			];
 		},
